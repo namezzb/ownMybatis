@@ -43,3 +43,5 @@ bin/
 *.zip
 *.tar.gz
 *.rar
+
+*.claude
