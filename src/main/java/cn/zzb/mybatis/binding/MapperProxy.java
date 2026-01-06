@@ -1,5 +1,7 @@
 package cn.zzb.mybatis.binding;
 
+import cn.zzb.mybatis.session.SqlSession;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -12,9 +14,9 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     private static final long serialVersionUID = 1L;
 
     private final Class<T> mapperInterface;
-    private Map<String, String> sqlSession;
+    private SqlSession sqlSession;
 
-    public MapperProxy(Class<T> mapperInterface, Map<String, String> sqlSession) {
+    public MapperProxy(Class<T> mapperInterface, SqlSession sqlSession) {
         this.mapperInterface = mapperInterface;
         this.sqlSession = sqlSession;
     }
@@ -24,9 +26,7 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
         if(Object.class.equals(method.getDeclaringClass())){
             return method.invoke(this, args);
         }else{
-            String s = "测试代理了!" + "\n" + sqlSession.get(mapperInterface.getName() + "." + method.getName()) + "\n" + "method: " +
-                    method.getName() + "(" + Arrays.toString(args) + ")";
-            return s;
+            return sqlSession.selectOne(method.getName(), args);
         }
     }
 }

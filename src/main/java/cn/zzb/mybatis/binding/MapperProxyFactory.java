@@ -1,5 +1,7 @@
 package cn.zzb.mybatis.binding;
 
+import cn.zzb.mybatis.session.SqlSession;
+
 import java.lang.reflect.Proxy;
 import java.util.Map;
 
@@ -10,7 +12,7 @@ public class MapperProxyFactory<T> {
         this.mapperInteface = mapperInteface;
     }
 
-    public T newInstance(Map<String, String> sqlSession) {
+    public T newInstance(SqlSession sqlSession) {
         return (T) Proxy.newProxyInstance(mapperInteface.getClassLoader(),
                 new Class[]{mapperInteface},
                 new MapperProxy(mapperInteface, sqlSession));
