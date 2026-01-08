@@ -1,29 +1,37 @@
 package cn.zzb.mybatis.session.defaults;
 
 import cn.zzb.mybatis.binding.MapperRegistry;
+import cn.zzb.mybatis.mapping.MappedStatement;
+import cn.zzb.mybatis.session.Configuration;
 import cn.zzb.mybatis.session.SqlSession;
 
 public class DefaultSqlSession implements SqlSession {
 
-    private final MapperRegistry mapperRegistry;
+    private Configuration configuration;
 
-    public DefaultSqlSession(MapperRegistry mapperRegistry) {
-        this.mapperRegistry = mapperRegistry;
+    public DefaultSqlSession(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     @Override
     public <T> T selectOne(String statement) {
-        return (T) ("被代理了!!方法是: selectOne(String statement), sqlid: " + statement);
+        MappedStatement mappedStatement = configuration.getMappedStatement(statement);
+        return (T) ("拿到了sqlId是" + statement + ", sql是" + mappedStatement.getSql());
     }
 
     @Override
     public <T> T selectOne(String statement, Object parameter) {
-        return (T) ("被代理了!!方法是: selectOne(String statement, Object parameter), sqlid: " +
-                statement + ", parameter: " + parameter);
+        MappedStatement mappedStatement = configuration.getMappedStatement(statement);
+        return (T) ("拿到了sqlId是" + statement + ", sql是" + mappedStatement.getSql() + ", parameter是" + parameter);
+    }
+
+    @Override
+    public Configuration getConfiguration() {
+        return configuration;
     }
 
     @Override
     public <T> T getMapper(Class<T> type) {
-        return mapperRegistry.getMapper(type, this);
+        return configuration.getMapper(type, this);
     }
 }
