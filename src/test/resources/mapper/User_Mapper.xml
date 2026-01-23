@@ -2,10 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.zzb.mybatis.test.dao.IUserDao">
 
-    <select id="selectUserNameById" parameterType="java.lang.Long" resultType="cn.zzb.mybatis.test.po.User">
+    <select id="queryUserInfoById" parameterType="java.lang.Long" resultType="cn.zzb.mybatis.test.po.User">
         SELECT id, userId, userHead, createTime
         FROM user
         where id = #{id}
+    </select>
+
+    <select id="querySkuById" parameterType="java.lang.Long" resultType="cn.zzb.mybatis.test.po.Sku">
+        SELECT id, source, goods_id, goods_name, original_price, create_time, update_time
+        FROM sku
+        WHERE id = #{id}
     </select>
 
 </mapper>

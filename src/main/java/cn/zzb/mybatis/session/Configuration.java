@@ -1,23 +1,33 @@
 package cn.zzb.mybatis.session;
 
 import cn.zzb.mybatis.binding.MapperRegistry;
+import cn.zzb.mybatis.datasource.druid.DruidDataSourceFactory;
+import cn.zzb.mybatis.mapping.Environment;
 import cn.zzb.mybatis.mapping.MappedStatement;
+import cn.zzb.mybatis.transaction.jdbc.JdbcTransactionFactory;
+import cn.zzb.mybatis.type.TypeAliasRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Configuration {
 
-    /**
-     * 管理MapperRegistry
-     */
+    //环境
+    protected Environment environment;
+
+    // 映射注册机
     protected MapperRegistry mapperRegistry = new MapperRegistry(this);
 
-
-    /**
-     * 映射的语句，存在Map里
-     */
+    // 映射的语句，存在Map里
     protected final Map<String, MappedStatement> mappedStatements = new HashMap<>();
+
+    // 类型别名注册机
+    protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+
+    public Configuration() {
+        typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class);
+        typeAliasRegistry.registerAlias("DRUID", DruidDataSourceFactory.class);
+    }
 
 
     //Mapper
@@ -45,6 +55,19 @@ public class Configuration {
 
     public MappedStatement getMappedStatement(String id) {
         return mappedStatements.get(id);
+    }
+
+    //Envviroment
+    public Environment getEnviroment() {
+        return environment;
+    }
+
+    public void setEnviroment(Environment environment) {
+        this.environment = environment;
+    }
+
+    public TypeAliasRegistry getTypeAliasRegistry() {
+        return typeAliasRegistry;
     }
 
 }

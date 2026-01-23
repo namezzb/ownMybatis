@@ -1,21 +1,24 @@
 package cn.zzb.mybatis.builder.xml;
 
 import cn.zzb.mybatis.builder.BaseBuilder;
+import cn.zzb.mybatis.datasource.druid.DruidDataSourceFactory;
 import cn.zzb.mybatis.io.Resources;
+import cn.zzb.mybatis.mapping.BoundSql;
+import cn.zzb.mybatis.mapping.Environment;
 import cn.zzb.mybatis.mapping.MappedStatement;
 import cn.zzb.mybatis.mapping.SqlCommandType;
 import cn.zzb.mybatis.session.Configuration;
+import cn.zzb.mybatis.transaction.TransactionFactory;
+import cn.zzb.mybatis.type.TypeAliasRegistry;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.xml.sax.InputSource;
 
+import javax.sql.DataSource;
 import java.io.Reader;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,6 +49,8 @@ public class XMLConfigBuilder extends BaseBuilder {
      */
     public Configuration parse() {
         try {
+            //解析环境
+            environmentsElement(root.element("environments"));
             // 解析映射器
             mapperElement(root.element("mappers"));
         } catch (Exception e) {
@@ -53,6 +58,35 @@ public class XMLConfigBuilder extends BaseBuilder {
         }
         return configuration;
     }
+
+    private void environmentsElement(Element context) throws Exception{
+        String enviroment = context.attributeValue("default");
+
+        List<Element> environmentList = context.elements("environment");
+        for(Element e : environmentList){
+            String id = e.attributeValue("id");
+            if(id.equals(enviroment)){
+                //事务管理器
+                TransactionFactory transactionFactory = (TransactionFactory) typeAliasRegistry.resolveAlias(e.element("transactionManager").attributeValue("type")).newInstance();
+                //数据源
+                Element dataSource = e.element("dataSource");
+                DruidDataSourceFactory dataSourceFactory = (DruidDataSourceFactory) typeAliasRegistry.resolveAlias(dataSource
+                                   .attributeValue("type")).newInstance();
+                List<Element> propertyList = dataSource.elements("property");
+                Properties prop = new Properties();
+                for(Element property : propertyList){
+                    prop.setProperty(property.attributeValue("name"), property.attributeValue("value"));
+                }
+                dataSourceFactory.setProperties(prop);
+                //拿到数据源
+                DataSource datasource = dataSourceFactory.getDataSource();
+                //聚合构建环境
+                Environment env = new Environment.Builder(id).transactionFactory(transactionFactory).dataSource(datasource).build();
+                configuration.setEnviroment(env);
+            }
+        }
+    }
+
 
     private void mapperElement(Element mappers) throws Exception {
         List<Element> mapperList = mappers.elements("mapper");
@@ -87,7 +121,8 @@ public class XMLConfigBuilder extends BaseBuilder {
                 String msId = namespace + "." + id;
                 String nodeName = node.getName();
                 SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));
-                MappedStatement mappedStatement = new MappedStatement.Builder(configuration, msId, sqlCommandType, parameterType, resultType, sql, parameter).build();
+                MappedStatement mappedStatement = new MappedStatement.Builder(configuration, msId, sqlCommandType,
+                        new BoundSql(sql, parameter, parameterType, resultType)).build();
                 // 添加解析 SQL
                 configuration.addMappedStatement(mappedStatement);
             }
