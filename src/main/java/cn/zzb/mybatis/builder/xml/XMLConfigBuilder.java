@@ -1,6 +1,7 @@
 package cn.zzb.mybatis.builder.xml;
 
 import cn.zzb.mybatis.builder.BaseBuilder;
+import cn.zzb.mybatis.datasource.DataSourceFactory;
 import cn.zzb.mybatis.datasource.druid.DruidDataSourceFactory;
 import cn.zzb.mybatis.io.Resources;
 import cn.zzb.mybatis.mapping.BoundSql;
@@ -70,7 +71,7 @@ public class XMLConfigBuilder extends BaseBuilder {
                 TransactionFactory transactionFactory = (TransactionFactory) typeAliasRegistry.resolveAlias(e.element("transactionManager").attributeValue("type")).newInstance();
                 //数据源
                 Element dataSource = e.element("dataSource");
-                DruidDataSourceFactory dataSourceFactory = (DruidDataSourceFactory) typeAliasRegistry.resolveAlias(dataSource
+                DataSourceFactory dataSourceFactory = (DataSourceFactory) typeAliasRegistry.resolveAlias(dataSource
                                    .attributeValue("type")).newInstance();
                 List<Element> propertyList = dataSource.elements("property");
                 Properties prop = new Properties();

@@ -1,7 +1,7 @@
 package cn.zzb.mybatis.test.po;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Sku {
     private Long id;
@@ -9,8 +9,8 @@ public class Sku {
     private String goods_id;
     private String goods_name;
     private BigDecimal original_price;
-    private LocalDateTime create_time;
-    private LocalDateTime update_time;
+    private Date create_time;
+    private Date update_time;
 
     public Long getId() {
         return id;
@@ -52,19 +52,19 @@ public class Sku {
         this.original_price = original_price;
     }
 
-    public LocalDateTime getCreate_time() {
+    public Date getCreate_time() {
         return create_time;
     }
 
-    public void setCreate_time(LocalDateTime create_time) {
+    public void setCreate_time(Date create_time) {
         this.create_time = create_time;
     }
 
-    public LocalDateTime getUpdate_time() {
+    public Date getUpdate_time() {
         return update_time;
     }
 
-    public void setUpdate_time(LocalDateTime update_time) {
+    public void setUpdate_time(Date update_time) {
         this.update_time = update_time;
     }
 }

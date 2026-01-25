@@ -5,10 +5,6 @@ import cn.zzb.mybatis.test.po.User;
 
 public interface IUserDao {
 
-    Integer selectUserGenderById(Integer userId);
-
-    String selectUserNameById(Integer userId);
-
     User queryUserInfoById(Long userId);
 
     Sku querySkuById(Long skuId);
