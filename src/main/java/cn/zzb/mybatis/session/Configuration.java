@@ -4,8 +4,16 @@ import cn.zzb.mybatis.binding.MapperRegistry;
 import cn.zzb.mybatis.datasource.druid.DruidDataSourceFactory;
 import cn.zzb.mybatis.datasource.pooled.PooledDataSourceFactory;
 import cn.zzb.mybatis.datasource.unpooled.UnpooledDataSourceFactory;
+import cn.zzb.mybatis.executor.Executor;
+import cn.zzb.mybatis.executor.SimpleExecutor;
+import cn.zzb.mybatis.executor.resultset.DefaultResultSetHandler;
+import cn.zzb.mybatis.executor.resultset.ResultSetHandler;
+import cn.zzb.mybatis.executor.statement.PreparedStatementHandler;
+import cn.zzb.mybatis.executor.statement.StatementHandler;
+import cn.zzb.mybatis.mapping.BoundSql;
 import cn.zzb.mybatis.mapping.Environment;
 import cn.zzb.mybatis.mapping.MappedStatement;
+import cn.zzb.mybatis.transaction.Transaction;
 import cn.zzb.mybatis.transaction.jdbc.JdbcTransactionFactory;
 import cn.zzb.mybatis.type.TypeAliasRegistry;
 
@@ -62,7 +70,7 @@ public class Configuration {
     }
 
     //Envviroment
-    public Environment getEnviroment() {
+    public Environment getEnvironment() {
         return environment;
     }
 
@@ -70,8 +78,32 @@ public class Configuration {
         this.environment = environment;
     }
 
+    //TypeAliasRegistry
     public TypeAliasRegistry getTypeAliasRegistry() {
         return typeAliasRegistry;
+    }
+
+
+
+    /**
+     * 创建结果集处理器
+     */
+    public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, BoundSql boundSql) {
+        return new DefaultResultSetHandler(executor, mappedStatement, boundSql);
+    }
+
+    /**
+     * 生产执行器
+     */
+    public Executor newExecutor(Transaction transaction) {
+        return new SimpleExecutor(this, transaction);
+    }
+
+    /**
+     * 创建语句处理器
+     */
+    public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter, ResultHandler resultHandler, BoundSql boundSql) {
+        return new PreparedStatementHandler(executor, mappedStatement, parameter, resultHandler, boundSql);
     }
 
 }

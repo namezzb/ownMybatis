@@ -16,16 +16,24 @@ import org.junit.Test;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-
-/**
- * @author 小傅哥，微信：fustack
- * @description 单元测试
- * @date 2022/3/26
- * @github https://github.com/fuzhengwei
- * @Copyright 公众号：bugstack虫洞栈 | 博客：https://bugstack.cn - 沉淀、分享、成长，让自己和他人都能有所收获！
- */
 @Slf4j
 public class InitTest {
+
+
+    @Test
+    public void test_SignalSqlSessionFactory() throws IOException {
+        // 1. 从SqlSessionFactory中获取SqlSession
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader("mybatis-config-datasource.xml"));
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+
+        // 2. 获取映射器对象
+        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+
+        // 3. 测试验证
+        Sku sku = userDao.querySkuById(1L);
+        log.info("测试结果：{}", JSONUtil.toJsonStr(sku, JSONConfig.create().setDateFormat("yyyy-MM-dd HH:mm:ss")));
+    }
+
 
     @Test
     public void test_SqlSessionFactory() throws IOException {
