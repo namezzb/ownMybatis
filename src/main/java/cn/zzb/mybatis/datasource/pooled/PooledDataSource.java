@@ -410,4 +410,23 @@ public class PooledDataSource implements DataSource {
         this.expectedConnectionTypeCode = expectedConnectionTypeCode;
     }
 
+
+
+    public String getDriver() {
+        return dataSource.getDriver();
+    }
+
+    public String getUrl() {
+        return dataSource.getUrl();
+    }
+
+    public String getUsername() {
+        return dataSource.getUsername();
+    }
+
+    public String getPassword() {
+        return dataSource.getPassword();
+    }
+
+
 }
