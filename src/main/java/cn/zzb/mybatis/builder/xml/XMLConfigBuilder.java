@@ -2,15 +2,10 @@ package cn.zzb.mybatis.builder.xml;
 
 import cn.zzb.mybatis.builder.BaseBuilder;
 import cn.zzb.mybatis.datasource.DataSourceFactory;
-import cn.zzb.mybatis.datasource.druid.DruidDataSourceFactory;
 import cn.zzb.mybatis.io.Resources;
-import cn.zzb.mybatis.mapping.BoundSql;
 import cn.zzb.mybatis.mapping.Environment;
-import cn.zzb.mybatis.mapping.MappedStatement;
-import cn.zzb.mybatis.mapping.SqlCommandType;
 import cn.zzb.mybatis.session.Configuration;
 import cn.zzb.mybatis.transaction.TransactionFactory;
-import cn.zzb.mybatis.type.TypeAliasRegistry;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -18,10 +13,10 @@ import org.dom4j.io.SAXReader;
 import org.xml.sax.InputSource;
 
 import javax.sql.DataSource;
+import java.io.InputStream;
 import java.io.Reader;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @description XML配置构建器，建造者模式，继承BaseBuilder
@@ -50,7 +45,7 @@ public class XMLConfigBuilder extends BaseBuilder {
      */
     public Configuration parse() {
         try {
-            //解析环境
+            // 环境
             environmentsElement(root.element("environments"));
             // 解析映射器
             mapperElement(root.element("mappers"));
@@ -60,76 +55,68 @@ public class XMLConfigBuilder extends BaseBuilder {
         return configuration;
     }
 
-    private void environmentsElement(Element context) throws Exception{
-        String enviroment = context.attributeValue("default");
+    /**
+     * <environments default="development">
+     * <environment id="development">
+     * <transactionManager type="JDBC">
+     * <property name="..." value="..."/>
+     * </transactionManager>
+     * <dataSource type="POOLED">
+     * <property name="driver" value="${driver}"/>
+     * <property name="url" value="${url}"/>
+     * <property name="username" value="${username}"/>
+     * <property name="password" value="${password}"/>
+     * </dataSource>
+     * </environment>
+     * </environments>
+     */
+    private void environmentsElement(Element context) throws Exception {
+        String environment = context.attributeValue("default");
 
         List<Element> environmentList = context.elements("environment");
-        for(Element e : environmentList){
+        for (Element e : environmentList) {
             String id = e.attributeValue("id");
-            if(id.equals(enviroment)){
-                //事务管理器
-                TransactionFactory transactionFactory = (TransactionFactory) typeAliasRegistry.resolveAlias(e.element("transactionManager").attributeValue("type")).newInstance();
-                //数据源
-                Element dataSource = e.element("dataSource");
-                DataSourceFactory dataSourceFactory = (DataSourceFactory) typeAliasRegistry.resolveAlias(dataSource
-                                   .attributeValue("type")).newInstance();
-                List<Element> propertyList = dataSource.elements("property");
-                Properties prop = new Properties();
-                for(Element property : propertyList){
-                    prop.setProperty(property.attributeValue("name"), property.attributeValue("value"));
+            if (environment.equals(id)) {
+                // 事务管理器
+                TransactionFactory txFactory = (TransactionFactory) typeAliasRegistry.resolveAlias(e.element("transactionManager").attributeValue("type")).newInstance();
+
+                // 数据源
+                Element dataSourceElement = e.element("dataSource");
+                DataSourceFactory dataSourceFactory = (DataSourceFactory) typeAliasRegistry.resolveAlias(dataSourceElement.attributeValue("type")).newInstance();
+                List<Element> propertyList = dataSourceElement.elements("property");
+                Properties props = new Properties();
+                for (Element property : propertyList) {
+                    props.setProperty(property.attributeValue("name"), property.attributeValue("value"));
                 }
-                dataSourceFactory.setProperties(prop);
-                //拿到数据源
-                DataSource datasource = dataSourceFactory.getDataSource();
-                //聚合构建环境
-                Environment env = new Environment.Builder(id).transactionFactory(transactionFactory).dataSource(datasource).build();
-                configuration.setEnviroment(env);
+                dataSourceFactory.setProperties(props);
+                DataSource dataSource = dataSourceFactory.getDataSource();
+
+                // 构建环境
+                Environment.Builder environmentBuilder = new Environment.Builder(id)
+                        .transactionFactory(txFactory)
+                        .dataSource(dataSource);
+
+                configuration.setEnvironment(environmentBuilder.build());
             }
         }
     }
 
-
+    /*
+     * <mappers>
+     *	 <mapper resource="org/mybatis/builder/AuthorMapper.xml"/>
+     *	 <mapper resource="org/mybatis/builder/BlogMapper.xml"/>
+     *	 <mapper resource="org/mybatis/builder/PostMapper.xml"/>
+     * </mappers>
+     */
     private void mapperElement(Element mappers) throws Exception {
         List<Element> mapperList = mappers.elements("mapper");
         for (Element e : mapperList) {
             String resource = e.attributeValue("resource");
-            Reader reader = Resources.getResourceAsReader(resource);
-            SAXReader saxReader = new SAXReader();
-            Document document = saxReader.read(new InputSource(reader));
-            Element root = document.getRootElement();
-            //命名空间
-            String namespace = root.attributeValue("namespace");
+            InputStream inputStream = Resources.getResourceAsStream(resource);
 
-            // SELECT
-            List<Element> selectNodes = root.elements("select");
-            for (Element node : selectNodes) {
-                String id = node.attributeValue("id");
-                String parameterType = node.attributeValue("parameterType");
-                String resultType = node.attributeValue("resultType");
-                String sql = node.getText();
-
-                // ? 匹配
-                Map<Integer, String> parameter = new HashMap<>();
-                Pattern pattern = Pattern.compile("(#\\{(.*?)})");
-                Matcher matcher = pattern.matcher(sql);
-                for (int i = 1; matcher.find(); i++) {
-                    String g1 = matcher.group(1);
-                    String g2 = matcher.group(2);
-                    parameter.put(i, g2);
-                    sql = sql.replace(g1, "?");
-                }
-
-                String msId = namespace + "." + id;
-                String nodeName = node.getName();
-                SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));
-                MappedStatement mappedStatement = new MappedStatement.Builder(configuration, msId, sqlCommandType,
-                        new BoundSql(sql, parameter, parameterType, resultType)).build();
-                // 添加解析 SQL
-                configuration.addMappedStatement(mappedStatement);
-            }
-
-            // 注册Mapper映射器
-            configuration.addMapper(Resources.classForName(namespace));
+            // 在for循环里每个mapper都重新new一个XMLMapperBuilder，来解析
+            XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource);
+            mapperParser.parse();
         }
     }
 

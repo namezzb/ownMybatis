@@ -77,11 +77,16 @@
             <artifactId>druid</artifactId>
             <version>1.2.9</version>
         </dependency>
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.75</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ognl</groupId>
+            <artifactId>ognl</artifactId>
+            <version>3.3.2</version>
         </dependency>
     </dependencies>
     <build>

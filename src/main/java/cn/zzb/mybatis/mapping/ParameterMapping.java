@@ -3,6 +3,9 @@ package cn.zzb.mybatis.mapping;
 import cn.zzb.mybatis.session.Configuration;
 import cn.zzb.mybatis.type.JdbcType;
 
+/**
+ * 参数映射 #{property,javaType=int,jdbcType=NUMERIC}
+ */
 public class ParameterMapping {
 
     private Configuration configuration;
@@ -21,9 +24,10 @@ public class ParameterMapping {
 
         private ParameterMapping parameterMapping = new ParameterMapping();
 
-        public Builder(Configuration configuration, String property) {
+        public Builder(Configuration configuration, String property, Class<?> javaType) {
             parameterMapping.configuration = configuration;
             parameterMapping.property = property;
+            parameterMapping.javaType = javaType;
         }
 
         public Builder javaType(Class<?> javaType) {
@@ -36,6 +40,9 @@ public class ParameterMapping {
             return this;
         }
 
+        public ParameterMapping build() {
+            return parameterMapping;
+        }
     }
 
     public Configuration getConfiguration() {
@@ -53,4 +60,5 @@ public class ParameterMapping {
     public JdbcType getJdbcType() {
         return jdbcType;
     }
+
 }

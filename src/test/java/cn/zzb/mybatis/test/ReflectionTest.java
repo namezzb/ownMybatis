@@ -20,7 +20,7 @@ public class ReflectionTest {
         Teacher teacher = new Teacher();
         List<Teacher.Student> list = new ArrayList<>();
         list.add(new Teacher.Student());
-        teacher.setName("小傅哥");
+        teacher.setName("zzb");
         teacher.setStudents(list);
         MetaObject metaObject = SystemMetaObject.forObject(teacher);
         logger.info("getGetterNames：{}", JSON.toJSONString(metaObject.getGetterNames()));

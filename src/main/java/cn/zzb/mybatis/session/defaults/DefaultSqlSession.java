@@ -1,16 +1,10 @@
 package cn.zzb.mybatis.session.defaults;
 
 import cn.zzb.mybatis.executor.Executor;
-import cn.zzb.mybatis.mapping.BoundSql;
-import cn.zzb.mybatis.mapping.Environment;
 import cn.zzb.mybatis.mapping.MappedStatement;
 import cn.zzb.mybatis.session.Configuration;
 import cn.zzb.mybatis.session.SqlSession;
 
-import java.lang.reflect.Method;
-import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,7 +28,7 @@ public class DefaultSqlSession implements SqlSession {
     public <T> T selectOne(String statement, Object parameter){
         try {
             MappedStatement ms = configuration.getMappedStatement(statement);
-            List<T> query = executor.query(ms, parameter, Executor.NO_RESULT_HANDLER, ms.getBoundSql());
+            List<T> query = executor.query(ms, parameter, Executor.NO_RESULT_HANDLER, ms.getSqlSource().getBoundSql(parameter));
             return query.get(0);
         } catch (Exception e) {
             e.printStackTrace();
