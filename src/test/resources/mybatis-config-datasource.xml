@@ -9,7 +9,7 @@
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://117.72.83.115:13306/group_buy_market?useUnicode=true"/>
+                <property name="url" value="jdbc:mysql://117.72.62.165:13306/group_buy_market?useUnicode=true"/>
                 <property name="username" value="root"/>
                 <property name="password" value="Zhangzibo518"/>
             </dataSource>
