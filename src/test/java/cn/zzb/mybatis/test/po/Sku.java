@@ -12,6 +12,14 @@ public class Sku {
     private Date create_time;
     private Date update_time;
 
+    public Sku() {
+    }
+
+    public Sku(Long id, String source) {
+        this.id = id;
+        this.source = source;
+    }
+
     public Long getId() {
         return id;
     }

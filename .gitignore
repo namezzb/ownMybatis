@@ -47,3 +47,4 @@ bin/
 *.claude
 *.serena
 *.md
+/docs

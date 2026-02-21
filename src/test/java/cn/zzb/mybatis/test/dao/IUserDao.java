@@ -8,4 +8,6 @@ public interface IUserDao {
     User queryUserInfoById(Long userId);
 
     Sku querySkuById(Long skuId);
+
+    Sku querySkuByInfo(Sku sku);
 }

@@ -4,6 +4,9 @@ import cn.zzb.mybatis.executor.Executor;
 import cn.zzb.mybatis.mapping.MappedStatement;
 import cn.zzb.mybatis.session.Configuration;
 import cn.zzb.mybatis.session.SqlSession;
+import com.alibaba.fastjson.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -26,6 +29,8 @@ import java.util.List;
  * @author zzb
  */
 public class DefaultSqlSession implements SqlSession {
+
+    private Logger logger = LoggerFactory.getLogger(DefaultSqlSession.class);
 
     /** 全局配置对象，包含所有配置信息和注册器 */
     private Configuration configuration;
@@ -74,6 +79,7 @@ public class DefaultSqlSession implements SqlSession {
      */
     @Override
     public <T> T selectOne(String statement, Object parameter){
+        logger.info("执行查询 statement：{} parameter：{}", statement, JSON.toJSONString(parameter));
         try {
             MappedStatement ms = configuration.getMappedStatement(statement);
             List<T> query = executor.query(ms, parameter, Executor.NO_RESULT_HANDLER, ms.getSqlSource().getBoundSql(parameter));

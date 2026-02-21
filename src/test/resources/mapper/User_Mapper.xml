@@ -14,4 +14,11 @@
         WHERE id = #{id}
     </select>
 
+    <select id="querySkuByInfo" parameterType="cn.zzb.mybatis.test.po.Sku" resultType="cn.zzb.mybatis.test.po.Sku">
+        SELECT id, source, goods_id, goods_name, original_price, create_time, update_time
+        FROM sku
+        WHERE id = #{id} AND source = #{source}
+    </select>
+
+
 </mapper>
