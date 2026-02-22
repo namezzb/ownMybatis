@@ -63,6 +63,11 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
 
     // 配置select|insert|update|delete
+
+    /**
+     * 核心处理语句标签的地方
+     * @param list
+     */
     private void buildStatementFromContext(List<Element> list) {
         for (Element element : list) {
             final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, element, currentNamespace);

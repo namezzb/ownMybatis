@@ -17,6 +17,11 @@ public class GenericTokenParser {
         this.handler = handler;
     }
 
+    /**
+     * 核心解析输出sql语句的地方,讲占位符换成?并且设置
+     * @param text
+     * @return
+     */
     public String parse(String text) {
         StringBuilder builder = new StringBuilder();
         if (text != null && text.length() > 0) {
@@ -42,6 +47,10 @@ public class GenericTokenParser {
                         offset = start + openToken.length();
                         String content = new String(src, offset, end - offset);
                         // 得到一对大括号里的字符串后，调用handler.handleToken,比如替换变量这种功能
+
+                        /**
+                         * 调用handler返回?并且设置ParameterMapping
+                         */
                         builder.append(handler.handleToken(content));
                         offset = end + closeToken.length();
                     }
