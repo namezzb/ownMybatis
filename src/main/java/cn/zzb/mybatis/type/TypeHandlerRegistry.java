@@ -1,6 +1,7 @@
 package cn.zzb.mybatis.type;
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -28,6 +29,8 @@ public final class TypeHandlerRegistry {
         register(String.class, JdbcType.VARCHAR, new StringTypeHandler());
 
         register(Date.class, new DateTypeHandler());
+
+        register(BigDecimal.class, new BigDecimalTypeHandler());
     }
 
     private <T> void register(Type javaType, TypeHandler<? extends T> typeHandler) {

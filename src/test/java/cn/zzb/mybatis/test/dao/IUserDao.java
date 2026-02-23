@@ -10,4 +10,10 @@ public interface IUserDao {
     Sku querySkuById(Long skuId);
 
     Sku querySkuByInfo(Sku sku);
+
+    int insertSku(Sku sku);
+
+    int updateSku(Sku sku);
+
+    int deleteSkuById(Long id);
 }

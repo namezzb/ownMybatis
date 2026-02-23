@@ -1,6 +1,5 @@
 package cn.zzb.mybatis.executor;
 
-
 import cn.zzb.mybatis.mapping.BoundSql;
 import cn.zzb.mybatis.mapping.MappedStatement;
 import cn.zzb.mybatis.session.Configuration;
@@ -10,10 +9,15 @@ import cn.zzb.mybatis.transaction.Transaction;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 /**
- 执行器抽象基类
+ * @author 小傅哥，微信：fustack
+ * @description 执行器抽象基类
+ * @date 2022/04/26
+ * @github https://github.com/fuzhengwei
+ * @copyright 公众号：bugstack虫洞栈 | 博客：https://bugstack.cn - 沉淀、分享、成长，让自己和他人都能有所收获！
  */
 public abstract class BaseExecutor implements Executor {
 
@@ -32,14 +36,21 @@ public abstract class BaseExecutor implements Executor {
     }
 
     @Override
-    public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+    public int update(MappedStatement ms, Object parameter) throws SQLException {
+        return doUpdate(ms, parameter);
+    }
+
+    @Override
+    public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
         if (closed) {
             throw new RuntimeException("Executor was closed.");
         }
         return doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
     }
 
-    protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql);
+    protected abstract int doUpdate(MappedStatement ms, Object parameter) throws SQLException;
+
+    protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException;
 
     @Override
     public Transaction getTransaction() {
@@ -81,6 +92,15 @@ public abstract class BaseExecutor implements Executor {
         } finally {
             transaction = null;
             closed = true;
+        }
+    }
+
+    protected void closeStatement(Statement statement) {
+        if (statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException ignore) {
+            }
         }
     }
 

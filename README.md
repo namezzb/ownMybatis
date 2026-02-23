@@ -22,7 +22,7 @@
 - ✅ 统一的 Configuration 配置类管理
 - ✅ 类型别名注册与解析（TypeAliasRegistry）
 - ✅ 类型处理器注册（TypeHandlerRegistry）
-  - StringTypeHandler、LongTypeHandler、DateTypeHandler
+  - StringTypeHandler、LongTypeHandler、DateTypeHandler、BigDecimalTypeHandler
 
 #### 2. SQL 解析与处理
 - ✅ XML 语句构建器（XMLStatementBuilder）
@@ -50,6 +50,7 @@
 #### 4. SQL 执行引擎
 - ✅ SqlSession 会话管理
 - ✅ Executor 执行器抽象
+- ✅ 完整 CRUD 操作支持（insert / update / delete / select）
 - ✅ StatementHandler 语句处理器
   - PreparedStatementHandler
   - SimpleStatementHandler

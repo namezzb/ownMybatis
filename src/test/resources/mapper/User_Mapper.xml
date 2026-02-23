@@ -20,5 +20,19 @@
         WHERE id = #{id} AND source = #{source}
     </select>
 
+    <insert id="insertSku" parameterType="cn.zzb.mybatis.test.po.Sku">
+        INSERT INTO sku (source, channel, goods_id, goods_name, original_price)
+        VALUES (#{source}, #{channel}, #{goods_id}, #{goods_name}, #{original_price})
+    </insert>
+
+    <update id="updateSku" parameterType="cn.zzb.mybatis.test.po.Sku">
+        UPDATE sku
+        SET goods_name = #{goods_name}, original_price = #{original_price}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteSkuById" parameterType="java.lang.Long">
+        DELETE FROM sku WHERE id = #{id}
+    </delete>
 
 </mapper>

@@ -9,11 +9,20 @@ import java.util.Date;
 public class Sku {
     private Long id;
     private String source;
+    private String channel;
     private String goods_id;
     private String goods_name;
     private BigDecimal original_price;
     private Date create_time;
     private Date update_time;
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
 
     public Sku() {
     }
