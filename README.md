@@ -29,17 +29,23 @@
 - ✅ SQL 源码抽象（SqlSource）
   - 静态 SQL 源码（StaticSqlSource）
   - 原始 SQL 源码（RawSqlSource）
+  - 动态 SQL 源码（DynamicSqlSource）
 - ✅ 参数映射解析（ParameterMapping）
 - ✅ 动态 SQL 节点支持（SqlNode）
   - 静态文本节点（StaticTextSqlNode）
   - 混合节点（MixedSqlNode）
+  - 条件节点（IfSqlNode）
+  - WHERE 智能节点（WhereSqlNode）
+  - 修剪节点（TrimSqlNode）
+  - 循环节点（ForeachSqlNode）
 - ✅ 通用 Token 解析器（GenericTokenParser）
 - ✅ `#{}` 占位符解析与参数化
 
 #### 3. Mapper 接口代理
 - ✅ Mapper 接口动态代理（MapperProxy）
+- ✅ Mapper 代理工厂（MapperProxyFactory）
 - ✅ Mapper 注册器（MapperRegistry）
-- ✅ 方法签名解析与缓存
+- ✅ Mapper 方法封装（MapperMethod）
 
 #### 4. SQL 执行引擎
 - ✅ SqlSession 会话管理
@@ -95,7 +101,9 @@ own-mybatis
 │   └── druid       # Druid 数据源
 ├── executor         # SQL 执行器
 │   ├── statement   # 语句处理器
-│   └── resultset   # 结果集处理器
+│   ├── resultset   # 结果集处理器
+│   ├── parameter   # 参数处理器
+│   └── result      # 结果上下文与处理器
 ├── io               # 资源加载工具
 ├── mapping          # SQL 映射相关
 ├── parsing          # 通用解析工具
@@ -215,7 +223,9 @@ sqlSession.close();
 - `MixedSqlNode`：组合多个 SQL 节点
 
 ### 6. 模板方法模式（Template Method Pattern）
-- `BaseBuilder`：提供通用的构建方法
+- `BaseExecutor`：定义执行流程骨架，子类实现具体策略
+- `BaseTypeHandler`：定义类型处理流程，子类实现具体转换
+- `BaseStatementHandler`：定义语句处理流程，子类实现具体操作
 
 ## 🔍 核心流程解析
 
