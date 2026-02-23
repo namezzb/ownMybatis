@@ -3,6 +3,7 @@ package cn.zzb.mybatis.session.defaults;
 import cn.zzb.mybatis.executor.Executor;
 import cn.zzb.mybatis.mapping.MappedStatement;
 import cn.zzb.mybatis.session.Configuration;
+import cn.zzb.mybatis.session.RowBounds;
 import cn.zzb.mybatis.session.SqlSession;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
@@ -82,7 +83,7 @@ public class DefaultSqlSession implements SqlSession {
         logger.info("执行查询 statement：{} parameter：{}", statement, JSON.toJSONString(parameter));
         try {
             MappedStatement ms = configuration.getMappedStatement(statement);
-            List<T> query = executor.query(ms, parameter, Executor.NO_RESULT_HANDLER, ms.getSqlSource().getBoundSql(parameter));
+            List<T> query = executor.query(ms, parameter, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER, ms.getSqlSource().getBoundSql(parameter));
             return query.get(0);
         } catch (Exception e) {
             e.printStackTrace();

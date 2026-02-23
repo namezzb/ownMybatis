@@ -216,8 +216,8 @@ public class Configuration {
      * @param boundSql        绑定的 SQL 对象（包含最终 SQL 和参数映射）
      * @return ResultSetHandler 实例
      */
-    public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, BoundSql boundSql) {
-        return new DefaultResultSetHandler(executor, mappedStatement, boundSql);
+    public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+        return new DefaultResultSetHandler(executor, mappedStatement, resultHandler, rowBounds, boundSql);
     }
 
     /**
@@ -256,8 +256,8 @@ public class Configuration {
      * @param boundSql        绑定的 SQL 对象
      * @return StatementHandler 实例
      */
-    public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter, ResultHandler resultHandler, BoundSql boundSql) {
-        return new PreparedStatementHandler(executor, mappedStatement, parameter, resultHandler, boundSql);
+    public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+        return new PreparedStatementHandler(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);
     }
 
     /**
@@ -329,6 +329,10 @@ public class Configuration {
 
     public LanguageDriver getDefaultScriptingLanguageInstance() {
         return languageRegistry.getDefaultDriver();
+    }
+
+    public ObjectFactory getObjectFactory() {
+        return objectFactory;
     }
 
 }

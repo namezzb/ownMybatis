@@ -4,6 +4,7 @@ package cn.zzb.mybatis.executor;
 import cn.zzb.mybatis.mapping.BoundSql;
 import cn.zzb.mybatis.mapping.MappedStatement;
 import cn.zzb.mybatis.session.ResultHandler;
+import cn.zzb.mybatis.session.RowBounds;
 import cn.zzb.mybatis.transaction.Transaction;
 
 import java.sql.SQLException;
@@ -16,8 +17,7 @@ public interface Executor {
 
     ResultHandler NO_RESULT_HANDLER = null;
 
-    <E> List<E> query(MappedStatement ms, Object parameter, ResultHandler resultHandler, BoundSql boundSql);
-
+    <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql);
     Transaction getTransaction();
 
     void commit(boolean required) throws SQLException;

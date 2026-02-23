@@ -1,8 +1,11 @@
 package cn.zzb.mybatis.test.po;
 
+import com.alibaba.fastjson.annotation.JSONType;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
+@JSONType(orders = {"id", "source", "goods_id", "goods_name", "original_price", "create_time", "update_time"})
 public class Sku {
     private Long id;
     private String source;

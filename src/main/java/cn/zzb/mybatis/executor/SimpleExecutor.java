@@ -1,12 +1,12 @@
 package cn.zzb.mybatis.executor;
 
 
-
 import cn.zzb.mybatis.executor.statement.StatementHandler;
 import cn.zzb.mybatis.mapping.BoundSql;
 import cn.zzb.mybatis.mapping.MappedStatement;
 import cn.zzb.mybatis.session.Configuration;
 import cn.zzb.mybatis.session.ResultHandler;
+import cn.zzb.mybatis.session.RowBounds;
 import cn.zzb.mybatis.transaction.Transaction;
 
 import java.sql.Connection;
@@ -67,19 +67,16 @@ public class SimpleExecutor extends BaseExecutor {
      * @return 查询结果列表，如果发生异常则返回 null
      */
     @Override
-    protected <E> List<E> doQuery(MappedStatement ms, Object parameter, ResultHandler resultHandler, BoundSql boundSql) {
+    protected <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
         try {
-            // 1. 获取全局配置对象
             Configuration configuration = ms.getConfiguration();
-            // 2. 创建语句处理器（封装 Statement 的创建和执行）
-            StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, resultHandler, boundSql);
-            // 3. 从事务中获取数据库连接
+            // 新建一个 StatementHandler
+            StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, rowBounds, resultHandler, boundSql);
             Connection connection = transaction.getConnection();
-            // 4. 创建 Statement 对象（PreparedStatement）
+            // 准备语句
             Statement stmt = handler.prepare(connection);
-            // 5. 设置 SQL 参数（将参数绑定到 ? 占位符）
             handler.parameterize(stmt);
-            // 6. 执行查询并处理结果集，返回结果列表
+            // 返回结果
             return handler.query(stmt, resultHandler);
         } catch (SQLException e) {
             e.printStackTrace();

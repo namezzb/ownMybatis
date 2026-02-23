@@ -22,6 +22,7 @@
 - ✅ 统一的 Configuration 配置类管理
 - ✅ 类型别名注册与解析（TypeAliasRegistry）
 - ✅ 类型处理器注册（TypeHandlerRegistry）
+  - StringTypeHandler、LongTypeHandler、DateTypeHandler
 
 #### 2. SQL 解析与处理
 - ✅ XML 语句构建器（XMLStatementBuilder）
@@ -47,6 +48,11 @@
   - PreparedStatementHandler
   - SimpleStatementHandler
 - ✅ ResultSetHandler 结果集处理器
+  - ResultSetWrapper 结果集包装器
+  - DefaultResultContext / DefaultResultHandler 结果上下文与处理器
+  - RowBounds 分页边界支持
+- ✅ ResultMap / ResultMapping 结果映射体系
+- ✅ MapperBuilderAssistant 映射构建器助手
 
 #### 5. 数据源管理
 - ✅ 数据源工厂抽象（DataSourceFactory）

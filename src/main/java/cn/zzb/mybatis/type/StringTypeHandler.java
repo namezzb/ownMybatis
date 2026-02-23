@@ -1,6 +1,7 @@
 package cn.zzb.mybatis.type;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -10,11 +11,16 @@ import java.sql.SQLException;
  * @github https://github.com/fuzhengwei/CodeDesignTutorials
  * @Copyright 公众号：bugstack虫洞栈 | 博客：https://bugstack.cn - 沉淀、分享、成长，让自己和他人都能有所收获！
  */
-public class StringTypeHandler extends BaseTypeHandler<String>{
+public class StringTypeHandler extends BaseTypeHandler<String> {
 
     @Override
     protected void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
         ps.setString(i, parameter);
+    }
+
+    @Override
+    protected String getNullableResult(ResultSet rs, String columnName) throws SQLException {
+        return rs.getString(columnName);
     }
 
 }

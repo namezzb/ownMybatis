@@ -1,11 +1,11 @@
 package cn.zzb.mybatis.executor;
 
 
-
 import cn.zzb.mybatis.mapping.BoundSql;
 import cn.zzb.mybatis.mapping.MappedStatement;
 import cn.zzb.mybatis.session.Configuration;
 import cn.zzb.mybatis.session.ResultHandler;
+import cn.zzb.mybatis.session.RowBounds;
 import cn.zzb.mybatis.transaction.Transaction;
 import org.slf4j.LoggerFactory;
 
@@ -32,13 +32,14 @@ public abstract class BaseExecutor implements Executor {
     }
 
     @Override
-    public <E> List<E> query(MappedStatement ms, Object parameter, ResultHandler resultHandler, BoundSql boundSql) {
+    public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
         if (closed) {
             throw new RuntimeException("Executor was closed.");
         }
-        return doQuery(ms, parameter, resultHandler, boundSql);
+        return doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
     }
 
+    protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql);
 
     @Override
     public Transaction getTransaction() {
@@ -82,8 +83,5 @@ public abstract class BaseExecutor implements Executor {
             closed = true;
         }
     }
-
-
-    protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, ResultHandler resultHandler, BoundSql boundSql);
 
 }

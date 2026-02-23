@@ -4,6 +4,7 @@ import cn.zzb.mybatis.executor.Executor;
 import cn.zzb.mybatis.mapping.BoundSql;
 import cn.zzb.mybatis.mapping.MappedStatement;
 import cn.zzb.mybatis.session.ResultHandler;
+import cn.zzb.mybatis.session.RowBounds;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -42,8 +43,8 @@ public class PreparedStatementHandler extends BaseStatementHandler{
      * @param resultHandler   结果处理器
      * @param boundSql        绑定的 SQL 对象
      */
-    public PreparedStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, ResultHandler resultHandler, BoundSql boundSql) {
-        super(executor, mappedStatement, parameterObject, resultHandler, boundSql);
+    public PreparedStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+        super(executor, mappedStatement, parameterObject, rowBounds, resultHandler, boundSql);
     }
 
     /**

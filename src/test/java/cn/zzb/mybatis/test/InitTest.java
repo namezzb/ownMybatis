@@ -28,7 +28,7 @@ public class InitTest {
 
         // 3. 测试验证
         Sku sku = userDao.querySkuById(1L);
-        log.info("测试结果：{}", JSON.toJSONString(sku));
+        log.info("测试结果：{}", JSON.toJSONStringWithDateFormat(sku, "yyyy-MM-dd HH:mm:ss"));
     }
 
     @Test
@@ -42,7 +42,7 @@ public class InitTest {
         Sku sku = new Sku(1L, "s01");
         // 3. 测试验证
         Sku skures = userDao.querySkuByInfo(sku);
-        log.info("测试结果：{}", JSON.toJSONString(skures));
+        log.info("测试结果：{}", JSON.toJSONStringWithDateFormat(skures, "yyyy-MM-dd HH:mm:ss"));
     }
 
 
