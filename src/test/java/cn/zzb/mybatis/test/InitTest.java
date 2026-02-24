@@ -6,7 +6,7 @@ import cn.zzb.mybatis.SqlSessionFactoryBuilder;
 import cn.zzb.mybatis.io.Resources;
 import cn.zzb.mybatis.session.SqlSession;
 import cn.zzb.mybatis.session.SqlSessionFactory;
-import cn.zzb.mybatis.test.dao.IUserDao;
+import cn.zzb.mybatis.test.dao.ISkuDao;
 import cn.zzb.mybatis.test.po.Sku;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class InitTest {
         SqlSession sqlSession = sqlSessionFactory.openSession();
 
         // 2. 获取映射器对象
-        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+        ISkuDao userDao = sqlSession.getMapper(ISkuDao.class);
 
         // 3. 测试验证
         Sku sku = userDao.querySkuById(3L);
@@ -38,7 +38,7 @@ public class InitTest {
         SqlSession sqlSession = sqlSessionFactory.openSession();
 
         // 2. 获取映射器对象
-        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+        ISkuDao userDao = sqlSession.getMapper(ISkuDao.class);
         Sku sku = new Sku(1L, "s01");
         // 3. 测试验证
         Sku skures = userDao.querySkuByInfo(sku);
@@ -53,7 +53,7 @@ public class InitTest {
         SqlSession sqlSession = sqlSessionFactory.openSession();
 
         // 2. 获取映射器对象
-        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+        ISkuDao userDao = sqlSession.getMapper(ISkuDao.class);
 
         // 3. 测试验证
         for (int i = 0; i < 50; i++) {

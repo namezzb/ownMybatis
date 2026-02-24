@@ -1,13 +1,14 @@
 package cn.zzb.mybatis.test.dao;
 
 import cn.zzb.mybatis.test.po.Sku;
-import cn.zzb.mybatis.test.po.User;
+import cn.zzb.mybatis.test.po.SkuVO;
 
-public interface IUserDao {
-
-    User queryUserInfoById(Long userId);
+public interface ISkuDao {
 
     Sku querySkuById(Long skuId);
+
+    // 使用 resultMap 映射驼峰属性
+    SkuVO querySkuVOById(Long id);
 
     Sku querySkuByInfo(Sku sku);
 

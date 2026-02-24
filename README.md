@@ -59,6 +59,10 @@
   - DefaultResultContext / DefaultResultHandler 结果上下文与处理器
   - RowBounds 分页边界支持
 - ✅ ResultMap / ResultMapping 结果映射体系
+  - ResultFlag 结果标志（ID / CONSTRUCTOR）
+  - ResultMapResolver 结果映射解析器
+  - XML `<resultMap>` 标签完整解析（`<id>` / `<result>`）
+  - applyPropertyMappings 列名到驼峰属性的精确映射
 - ✅ MapperBuilderAssistant 映射构建器助手
 
 #### 5. 数据源管理

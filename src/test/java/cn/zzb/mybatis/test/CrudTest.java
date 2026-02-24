@@ -4,7 +4,7 @@ import cn.zzb.mybatis.SqlSessionFactoryBuilder;
 import cn.zzb.mybatis.io.Resources;
 import cn.zzb.mybatis.session.SqlSession;
 import cn.zzb.mybatis.session.SqlSessionFactory;
-import cn.zzb.mybatis.test.dao.IUserDao;
+import cn.zzb.mybatis.test.dao.ISkuDao;
 import cn.zzb.mybatis.test.po.Sku;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class CrudTest {
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader("mybatis-config-datasource.xml"));
         SqlSession sqlSession = sqlSessionFactory.openSession();
 
-        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+        ISkuDao userDao = sqlSession.getMapper(ISkuDao.class);
 
         Sku sku = new Sku();
         sku.setSource("s02");
@@ -39,7 +39,7 @@ public class CrudTest {
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader("mybatis-config-datasource.xml"));
         SqlSession sqlSession = sqlSessionFactory.openSession();
 
-        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+        ISkuDao userDao = sqlSession.getMapper(ISkuDao.class);
 
         Sku sku = new Sku();
         sku.setId(1L);
@@ -56,7 +56,7 @@ public class CrudTest {
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader("mybatis-config-datasource.xml"));
         SqlSession sqlSession = sqlSessionFactory.openSession();
 
-        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+        ISkuDao userDao = sqlSession.getMapper(ISkuDao.class);
 
         int rows = userDao.deleteSkuById(1L);
         sqlSession.commit();

@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.zzb.mybatis.test.dao.IUserDao">
+<mapper namespace="cn.zzb.mybatis.test.dao.ISkuDao">
 
-    <select id="queryUserInfoById" parameterType="java.lang.Long" resultType="cn.zzb.mybatis.test.po.User">
-        SELECT id, userId, userHead, createTime
-        FROM user
-        where id = #{id}
+    <!-- resultMap：将数据库下划线列名映射到 SkuVO 驼峰属性 -->
+    <resultMap id="skuVOMap" type="cn.zzb.mybatis.test.po.SkuVO">
+        <id column="id" property="id"/>
+        <result column="source" property="source"/>
+        <result column="goods_id" property="goodsId"/>
+        <result column="goods_name" property="goodsName"/>
+        <result column="original_price" property="originalPrice"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="querySkuVOById" parameterType="java.lang.Long" resultMap="skuVOMap">
+        SELECT id, source, goods_id, goods_name, original_price, create_time, update_time
+        FROM sku
+        WHERE id = #{id}
     </select>
 
     <select id="querySkuById" parameterType="java.lang.Long" resultType="cn.zzb.mybatis.test.po.Sku">

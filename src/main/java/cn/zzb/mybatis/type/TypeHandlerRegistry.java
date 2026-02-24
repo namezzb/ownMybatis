@@ -27,9 +27,7 @@ public final class TypeHandlerRegistry {
         register(String.class, new StringTypeHandler());
         register(String.class, JdbcType.CHAR, new StringTypeHandler());
         register(String.class, JdbcType.VARCHAR, new StringTypeHandler());
-
         register(Date.class, new DateTypeHandler());
-
         register(BigDecimal.class, new BigDecimalTypeHandler());
     }
 
@@ -69,5 +67,10 @@ public final class TypeHandlerRegistry {
         }
         // type drives generics here
         return (TypeHandler<T>) handler;
+    }
+
+
+    public TypeHandler<?> getMappingTypeHandler(Class<? extends TypeHandler<?>> handlerType) {
+        return ALL_TYPE_HANDLERS_MAP.get(handlerType);
     }
 }
