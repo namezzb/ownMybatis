@@ -18,6 +18,7 @@
 
     <mappers>
         <mapper resource="mapper/User_Mapper.xml"/>
+        <mapper class="cn.zzb.mybatis.test.dao.ISkuAnnotationDao"/>
     </mappers>
 
 </configuration>

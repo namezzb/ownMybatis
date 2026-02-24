@@ -1,10 +1,7 @@
 package cn.zzb.mybatis.builder;
 
 
-import cn.zzb.mybatis.mapping.MappedStatement;
-import cn.zzb.mybatis.mapping.ResultMap;
-import cn.zzb.mybatis.mapping.SqlCommandType;
-import cn.zzb.mybatis.mapping.SqlSource;
+import cn.zzb.mybatis.mapping.*;
 import cn.zzb.mybatis.scripting.LanguageDriver;
 import cn.zzb.mybatis.session.Configuration;
 
@@ -36,6 +33,25 @@ public class MapperBuilderAssistant extends BaseBuilder {
         this.currentNamespace = currentNamespace;
     }
 
+    public String applyCurrentNamespace(String base, boolean isReference) {
+        if (base == null) {
+            return null;
+        }
+
+        if (isReference) {
+            if (base.contains(".")) return base;
+        } else {
+            if (base.startsWith(currentNamespace + ".")) {
+                return base;
+            }
+            if (base.contains(".")) {
+                throw new RuntimeException("Dots are not allowed in element names, please remove it from " + base);
+            }
+        }
+
+        return currentNamespace + "." + base;
+    }
+
     /**
      * 添加映射器语句
      */
@@ -48,7 +64,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
             Class<?> resultType,
             LanguageDriver lang
     ) {
-        // 给id加上namespace前缀：cn.zzb.mybatis.test.dao.IUserDao.queryUserInfoById
+        // 给id加上namespace前缀：cn.bugstack.mybatis.test.dao.IUserDao.queryUserInfoById
         id = applyCurrentNamespace(id, false);
         MappedStatement.Builder statementBuilder = new MappedStatement.Builder(configuration, id, sqlCommandType, sqlSource, resultType);
 
@@ -62,12 +78,6 @@ public class MapperBuilderAssistant extends BaseBuilder {
         return statement;
     }
 
-    /**
-     * 有关于resultMap以及resultType的处理
-     * @param resultMap
-     * @param resultType
-     * @param statementBuilder
-     */
     private void setStatementResultMap(
             String resultMap,
             Class<?> resultType,
@@ -78,7 +88,10 @@ public class MapperBuilderAssistant extends BaseBuilder {
         List<ResultMap> resultMaps = new ArrayList<>();
 
         if (resultMap != null) {
-            // TODO：暂无Map结果映射配置，本章节不添加此逻辑
+            String[] resultMapNames = resultMap.split(",");
+            for (String resultMapName : resultMapNames) {
+                resultMaps.add(configuration.getResultMap(resultMapName.trim()));
+            }
         }
         /*
          * 通常使用 resultType 即可满足大部分场景
@@ -96,15 +109,16 @@ public class MapperBuilderAssistant extends BaseBuilder {
         statementBuilder.resultMaps(resultMaps);
     }
 
+    public ResultMap addResultMap(String id, Class<?> type, List<ResultMapping> resultMappings) {
+        ResultMap.Builder inlineResultMapBuilder = new ResultMap.Builder(
+                configuration,
+                id,
+                type,
+                resultMappings);
 
-    public String applyCurrentNamespace(String base, boolean isReference) {
-        if (base == null) {
-            return null;
-        }
-        if (isReference) {
-            if (base.contains(".")) return base;
-        }
-        return currentNamespace + "." + base;
+        ResultMap resultMap = inlineResultMapBuilder.build();
+        configuration.addResultMap(resultMap);
+        return resultMap;
     }
 
 }

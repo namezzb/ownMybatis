@@ -182,42 +182,26 @@ public class XMLConfigBuilder extends BaseBuilder {
         }
     }
 
-    /**
-     * 解析 Mapper 映射文件引用（mappers 标签）
-     * <p>
-     * XML 结构示例：
-     * <pre>
-     * &lt;mappers&gt;
-     *   &lt;mapper resource="org/mybatis/builder/AuthorMapper.xml"/&gt;
-     *   &lt;mapper resource="org/mybatis/builder/BlogMapper.xml"/&gt;
-     *   &lt;mapper resource="org/mybatis/builder/PostMapper.xml"/&gt;
-     * &lt;/mappers&gt;
-     * </pre>
-     * <p>
-     * 解析流程：
-     * 1. 遍历所有 mapper 标签
-     * 2. 获取 resource 属性（Mapper.xml 文件路径）
-     * 3. 加载 XML 文件为输入流
-     * 4. 为每个 Mapper 文件创建 XMLMapperBuilder 解析器
-     * 5. 调用 parse() 方法解析 Mapper 文件（SQL 语句、结果映射等）
-     * <p>
-     * 注意：
-     * - 每个 Mapper 文件都会创建独立的 XMLMapperBuilder 实例
-     * - XMLMapperBuilder 负责解析具体的 SQL 语句和映射配置
-     * - 解析结果会注册到 Configuration 的 mappedStatements 中
-     *
-     * @param mappers mappers 元素节点
-     * @throws Exception 解析过程中可能抛出的异常
-     */
+
+
     private void mapperElement(Element mappers) throws Exception {
         List<Element> mapperList = mappers.elements("mapper");
         for (Element e : mapperList) {
             String resource = e.attributeValue("resource");
-            InputStream inputStream = Resources.getResourceAsStream(resource);
+            String mapperClass = e.attributeValue("class");
+            // XML 解析
+            if (resource != null && mapperClass == null) {
+                InputStream inputStream = Resources.getResourceAsStream(resource);
+                // 在for循环里每个mapper都重新new一个XMLMapperBuilder，来解析
+                XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource);
+                mapperParser.parse();
+            }
+            // Annotation 注解解析
+            else if (resource == null && mapperClass != null) {
+                Class<?> mapperInterface = Resources.classForName(mapperClass);
+                configuration.addMapper(mapperInterface);
+            }
 
-            // 在for循环里每个mapper都重新new一个XMLMapperBuilder，来解析
-            XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource);
-            mapperParser.parse();
         }
     }
 

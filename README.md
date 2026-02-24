@@ -89,6 +89,12 @@
 - ✅ XMLScriptBuilder 脚本构建器
 - ✅ DynamicContext 动态上下文
 
+#### 9. 注解支持
+- ✅ `@Select` / `@Insert` / `@Update` / `@Delete` SQL 注解
+- ✅ MapperAnnotationBuilder 注解解析器
+- ✅ 注解方式注册 Mapper（`<mapper class="..."/>`）
+- ✅ 注解与 XML 两种方式并存
+
 ## 🏗️ 项目架构
 
 ```

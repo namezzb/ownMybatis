@@ -14,6 +14,7 @@ import cn.zzb.mybatis.executor.statement.StatementHandler;
 import cn.zzb.mybatis.mapping.BoundSql;
 import cn.zzb.mybatis.mapping.Environment;
 import cn.zzb.mybatis.mapping.MappedStatement;
+import cn.zzb.mybatis.mapping.ResultMap;
 import cn.zzb.mybatis.reflection.MetaObject;
 import cn.zzb.mybatis.reflection.factory.DefaultObjectFactory;
 import cn.zzb.mybatis.reflection.factory.ObjectFactory;
@@ -62,6 +63,9 @@ public class Configuration {
 
     /** MappedStatement 存储容器：key 为 namespace.id，value 为 SQL 映射语句对象 */
     protected final Map<String, MappedStatement> mappedStatements = new HashMap<>();
+
+    // 结果映射，存在Map里
+    protected final Map<String, ResultMap> resultMaps = new HashMap<>();
 
     /** 类型别名注册器：管理 Java 类型的简短别名（如 string -> java.lang.String） */
     protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
@@ -333,6 +337,16 @@ public class Configuration {
 
     public ObjectFactory getObjectFactory() {
         return objectFactory;
+    }
+
+
+
+    public ResultMap getResultMap(String id) {
+        return resultMaps.get(id);
+    }
+
+    public void addResultMap(ResultMap resultMap) {
+        resultMaps.put(resultMap.getId(), resultMap);
     }
 
 }
