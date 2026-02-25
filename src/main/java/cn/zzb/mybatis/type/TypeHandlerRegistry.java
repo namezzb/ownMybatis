@@ -35,6 +35,10 @@ public final class TypeHandlerRegistry {
         register(javaType, null, typeHandler);
     }
 
+    public void register(JdbcType jdbcType, TypeHandler<?> handler) {
+        JDBC_TYPE_HANDLER_MAP.put(jdbcType, handler);
+    }
+
     private void register(Type javaType, JdbcType jdbcType, TypeHandler<?> handler) {
         if (null != javaType) {
             Map<JdbcType, TypeHandler<?>> map = TYPE_HANDLER_MAP.computeIfAbsent(javaType, k -> new HashMap<>());
@@ -73,4 +77,5 @@ public final class TypeHandlerRegistry {
     public TypeHandler<?> getMappingTypeHandler(Class<? extends TypeHandler<?>> handlerType) {
         return ALL_TYPE_HANDLERS_MAP.get(handlerType);
     }
+
 }

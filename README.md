@@ -51,6 +51,11 @@
 - ✅ SqlSession 会话管理
 - ✅ Executor 执行器抽象
 - ✅ 完整 CRUD 操作支持（insert / update / delete / select）
+- ✅ KeyGenerator 主键生成器体系
+  - KeyGenerator 接口（processBefore / processAfter）
+  - NoKeyGenerator（无主键生成）
+  - Jdbc3KeyGenerator（JDBC3 `getGeneratedKeys` 自增主键回填）
+  - SelectKeyGenerator（执行 `<selectKey>` SQL 获取主键，支持 BEFORE/AFTER）
 - ✅ StatementHandler 语句处理器
   - PreparedStatementHandler
   - SimpleStatementHandler

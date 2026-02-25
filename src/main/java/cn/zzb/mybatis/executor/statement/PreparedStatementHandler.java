@@ -1,6 +1,7 @@
 package cn.zzb.mybatis.executor.statement;
 
 import cn.zzb.mybatis.executor.Executor;
+import cn.zzb.mybatis.executor.keygen.KeyGenerator;
 import cn.zzb.mybatis.mapping.BoundSql;
 import cn.zzb.mybatis.mapping.MappedStatement;
 import cn.zzb.mybatis.session.ResultHandler;
@@ -121,7 +122,11 @@ public class PreparedStatementHandler extends BaseStatementHandler{
     public int update(Statement statement) throws SQLException {
         PreparedStatement ps = (PreparedStatement) statement;
         ps.execute();
-        return ps.getUpdateCount();
+        int rows = ps.getUpdateCount();
+        Object parameterObject = boundSql.getParameterObject();
+        KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
+        keyGenerator.processAfter(executor, mappedStatement, ps, parameterObject);
+        return rows;
     }
 
 }

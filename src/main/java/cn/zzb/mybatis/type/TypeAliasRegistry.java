@@ -1,11 +1,19 @@
 package cn.zzb.mybatis.type;
 
+
 import cn.zzb.mybatis.io.Resources;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * @author 小傅哥，微信：fustack
+ * @description 类型别名注册机
+ * @date 2022/04/13
+ * @github https://github.com/fuzhengwei
+ * @copyright 公众号：bugstack虫洞栈 | 博客：https://bugstack.cn - 沉淀、分享、成长，让自己和他人都能有所收获！
+ */
 public class TypeAliasRegistry {
 
     private final Map<String, Class<?>> TYPE_ALIASES = new HashMap<>();
@@ -25,7 +33,7 @@ public class TypeAliasRegistry {
         registerAlias("boolean", Boolean.class);
     }
 
-    public void registerAlias(String alias, Class<?> value){
+    public void registerAlias(String alias, Class<?> value) {
         String key = alias.toLowerCase(Locale.ENGLISH);
         TYPE_ALIASES.put(key, value);
     }

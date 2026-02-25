@@ -34,6 +34,11 @@
     <insert id="insertSku" parameterType="cn.zzb.mybatis.test.po.Sku">
         INSERT INTO sku (source, channel, goods_id, goods_name, original_price)
         VALUES (#{source}, #{channel}, #{goods_id}, #{goods_name}, #{original_price})
+
+        <selectKey keyProperty="id" order="AFTER" resultType="long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+
     </insert>
 
     <update id="updateSku" parameterType="cn.zzb.mybatis.test.po.Sku">

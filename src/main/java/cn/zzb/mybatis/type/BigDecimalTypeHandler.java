@@ -16,4 +16,9 @@ public class BigDecimalTypeHandler extends BaseTypeHandler<BigDecimal> {
     protected BigDecimal getNullableResult(ResultSet rs, String columnName) throws SQLException {
         return rs.getBigDecimal(columnName);
     }
+
+    @Override
+    public BigDecimal getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+        return rs.getBigDecimal(columnIndex);
+    }
 }
