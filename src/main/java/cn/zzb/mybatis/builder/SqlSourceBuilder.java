@@ -28,6 +28,20 @@ public class SqlSourceBuilder extends BaseBuilder {
         super(configuration);
     }
 
+    /**
+     * 将含有 #{} 占位符的原始 SQL 解析为 StaticSqlSource。
+     * <p>
+     * 解析过程：
+     * 1. 创建 ParameterMappingTokenHandler，负责将每个 #{} 替换为 ? 并收集参数映射信息
+     * 2. 使用 GenericTokenParser 扫描 SQL 字符串，遇到 #{...} 时回调 handler
+     * 3. 解析完成后，SQL 中所有 #{} 均已替换为 ?，参数映射列表也已构建完毕
+     * 4. 将最终 SQL 和参数映射封装为 StaticSqlSource 返回
+     *
+     * @param originalSql          含有 #{} 占位符的原始 SQL 字符串
+     * @param parameterType        参数对象的 Java 类型
+     * @param additionalParameters 额外的上下文参数（如动态 SQL 绑定变量）
+     * @return 解析完成的 StaticSqlSource，包含可直接执行的 SQL 和参数映射列表
+     */
     public SqlSource parse(String originalSql, Class<?> parameterType, Map<String, Object> additionalParameters) {
         ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType, additionalParameters);
         GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
