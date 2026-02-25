@@ -60,6 +60,19 @@ public final class TypeHandlerRegistry {
         return javaType != null && getTypeHandler((Type) javaType, jdbcType) != null;
     }
 
+    /**
+     * 根据 Java 类型和 JDBC 类型查找对应的 TypeHandler。
+     * <p>
+     * 查找策略（优先级从高到低）：
+     * 1. 先从 TYPE_HANDLER_MAP 中找到该 Java 类型对应的 jdbcHandlerMap
+     * 2. 用精确的 jdbcType 匹配，找到则直接返回
+     * 3. 若精确匹配失败，用 null 作为 key 再查一次（即只注册了 Java 类型、未指定 JDBC 类型的处理器）
+     * 4. 若 jdbcHandlerMap 本身不存在，返回 null
+     *
+     * @param type      Java 类型
+     * @param jdbcType  JDBC 类型，可为 null（表示不限定 JDBC 类型）
+     * @return 匹配的 TypeHandler，找不到时返回 null
+     */
     private <T> TypeHandler<T> getTypeHandler(Type type, JdbcType jdbcType) {
         Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);
         TypeHandler<?> handler = null;
