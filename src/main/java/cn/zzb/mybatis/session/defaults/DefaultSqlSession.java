@@ -48,6 +48,19 @@ public class DefaultSqlSession implements SqlSession {
         }
     }
 
+    /**
+     * 执行查询并返回多条结果。
+     * <p>
+     * 执行流程：
+     * 1. 从 Configuration 中根据 statement id 取出对应的 MappedStatement
+     * 2. 调用 SqlSource#getBoundSql 生成最终可执行的 SQL 和参数映射
+     * 3. 将查询委托给 Executor#query，由执行器负责创建 Statement、绑定参数、处理结果集
+     * 4. 使用默认的 RowBounds（不分页）和 NO_RESULT_HANDLER（不自定义结果处理）
+     *
+     * @param statement Mapper 方法的全限定 id，格式为 "namespace.methodId"
+     * @param parameter 调用方传入的参数对象
+     * @return 查询结果列表，无结果时返回空列表
+     */
     @Override
     public <E> List<E> selectList(String statement, Object parameter) {
         logger.info("执行查询 statement：{} parameter：{}", statement, JSON.toJSONString(parameter));
