@@ -36,7 +36,14 @@ public class MappedStatement {
     }
 
     /**
-     * step-11 新增方法
+     * 根据参数对象生成可执行的 BoundSql。
+     * <p>
+     * 对于静态 SQL（RawSqlSource），每次返回相同的 SQL 结构；
+     * 对于动态 SQL（DynamicSqlSource），每次调用都会重新计算 if/where/foreach 等标签，
+     * 根据当前参数值生成不同的 SQL 片段。
+     *
+     * @param parameterObject 调用 Mapper 方法时传入的参数对象
+     * @return BoundSql，包含最终可执行的 SQL 字符串和对应的参数映射列表
      */
     public BoundSql getBoundSql(Object parameterObject) {
         // 调用 SqlSource#getBoundSql
