@@ -26,6 +26,20 @@ public class SimpleExecutor extends BaseExecutor {
         super(configuration, transaction);
     }
 
+    /**
+     * 执行 INSERT / UPDATE / DELETE 语句。
+     * <p>
+     * 执行流程：
+     * 1. 通过 Configuration 创建 StatementHandler（默认为 PreparedStatementHandler）
+     *    - 构造期间会触发 KeyGenerator#processBefore，处理 BEFORE 类型的主键生成
+     * 2. 调用 prepareStatement：获取数据库连接，创建 PreparedStatement 并绑定参数
+     * 3. 调用 StatementHandler#update 执行 SQL，执行完毕后触发 KeyGenerator#processAfter
+     * 4. finally 块确保 Statement 一定被关闭，避免连接资源泄漏
+     *
+     * @param ms        当前执行的 SQL 映射语句对象
+     * @param parameter 调用方传入的参数对象
+     * @return 受影响的行数
+     */
     @Override
     protected int doUpdate(MappedStatement ms, Object parameter) throws SQLException {
         Statement stmt = null;
