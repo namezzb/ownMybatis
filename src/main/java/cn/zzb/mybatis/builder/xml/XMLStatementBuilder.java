@@ -99,6 +99,10 @@ public class XMLStatementBuilder extends BaseBuilder {
     private void processSelectKeyNodes(String id, Class<?> parameterTypeClass, LanguageDriver langDriver) {
         List<Element> selectKeyNodes = element.elements("selectKey");
         parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver);
+        // 解析完后移除，避免 XMLScriptBuilder 再次遍历到 <selectKey> 报错
+        for (Element selectKeyNode : selectKeyNodes) {
+            selectKeyNode.getParent().remove(selectKeyNode);
+        }
     }
 
     private void parseSelectKeyNodes(String parentId, List<Element> list, Class<?> parameterTypeClass, LanguageDriver languageDriver) {

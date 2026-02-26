@@ -33,13 +33,20 @@
 - ✅ 参数映射解析（ParameterMapping）
 - ✅ 动态 SQL 节点支持（SqlNode）
   - 静态文本节点（StaticTextSqlNode）
+  - 文本节点（TextSqlNode，支持 `${}` 替换与动态检测）
   - 混合节点（MixedSqlNode）
-  - 条件节点（IfSqlNode）
-  - WHERE 智能节点（WhereSqlNode）
-  - 修剪节点（TrimSqlNode）
+  - 条件节点（IfSqlNode，基于 OGNL 表达式求值）
+  - 修剪节点（TrimSqlNode，支持 prefix/suffix/prefixOverrides/suffixOverrides）
+  - WHERE 智能节点（WhereSqlNode，基于 TrimSqlNode）
   - 循环节点（ForeachSqlNode）
+- ✅ XMLScriptBuilder 动态标签解析（`<if>`、`<trim>` 标签注册与递归解析）
+- ✅ OGNL 表达式引擎集成
+  - OgnlCache（表达式解析结果缓存）
+  - OgnlClassResolver（自定义类解析器）
+  - ExpressionEvaluator（布尔/集合表达式求值）
 - ✅ 通用 Token 解析器（GenericTokenParser）
 - ✅ `#{}` 占位符解析与参数化
+- ✅ SimpleTypeRegistry 简单类型注册器
 
 #### 3. Mapper 接口代理
 - ✅ Mapper 接口动态代理（MapperProxy）

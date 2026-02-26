@@ -51,4 +51,22 @@
         DELETE FROM sku WHERE id = #{id}
     </delete>
 
+    <!-- 动态 SQL：if + where 标签，按条件查询 -->
+    <select id="querySkuByCondition" parameterType="cn.zzb.mybatis.test.po.Sku" resultType="cn.zzb.mybatis.test.po.Sku">
+        SELECT id, source, channel, goods_id, goods_name, original_price, create_time, update_time
+        FROM sku
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="source != null and source != ''">
+                AND source = #{source}
+            </if>
+            <if test="goods_name != null and goods_name != ''">
+                AND goods_name = #{goods_name}
+            </if>
+            <if test="channel != null and channel != ''">
+                AND channel = #{channel}
+            </if>
+        </trim>
+    </select>
+
+
 </mapper>

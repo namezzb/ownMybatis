@@ -49,7 +49,7 @@ public class GenericTokenParser {
                         // 得到一对大括号里的字符串后，调用handler.handleToken,比如替换变量这种功能
 
                         /**
-                         * 调用handler返回?并且设置ParameterMapping
+                         * 调用handler返回?,并且设置ParameterMapping
                          */
                         builder.append(handler.handleToken(content));
                         offset = end + closeToken.length();

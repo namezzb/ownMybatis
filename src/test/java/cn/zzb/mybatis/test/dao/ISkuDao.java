@@ -2,6 +2,7 @@ package cn.zzb.mybatis.test.dao;
 
 import cn.zzb.mybatis.test.po.Sku;
 import cn.zzb.mybatis.test.po.SkuVO;
+import java.util.List;
 
 public interface ISkuDao {
 
@@ -17,4 +18,8 @@ public interface ISkuDao {
     int updateSku(Sku sku);
 
     int deleteSkuById(Long id);
+
+    // 动态 SQL：if + trim(WHERE) 按条件查询
+    List<Sku> querySkuByCondition(Sku sku);
+
 }
