@@ -105,7 +105,16 @@
 - ✅ XMLScriptBuilder 脚本构建器
 - ✅ DynamicContext 动态上下文
 
-#### 9. 注解支持
+#### 9. 插件机制
+- ✅ Interceptor 拦截器接口
+- ✅ InterceptorChain 拦截器责任链
+- ✅ Plugin 动态代理包装器（JDK Proxy）
+- ✅ Invocation 调用上下文封装
+- ✅ `@Intercepts` / `@Signature` 注解声明拦截点
+- ✅ XMLConfigBuilder 解析 `<plugins>` 配置
+- ✅ StatementHandler 插件拦截支持（`getBoundSql` 接口扩展）
+
+#### 10. 注解支持
 - ✅ `@Select` / `@Insert` / `@Update` / `@Delete` SQL 注解
 - ✅ MapperAnnotationBuilder 注解解析器
 - ✅ 注解方式注册 Mapper（`<mapper class="..."/>`）

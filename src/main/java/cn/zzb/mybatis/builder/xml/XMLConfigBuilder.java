@@ -4,6 +4,7 @@ import cn.zzb.mybatis.builder.BaseBuilder;
 import cn.zzb.mybatis.datasource.DataSourceFactory;
 import cn.zzb.mybatis.io.Resources;
 import cn.zzb.mybatis.mapping.Environment;
+import cn.zzb.mybatis.plugin.Interceptor;
 import cn.zzb.mybatis.session.Configuration;
 import cn.zzb.mybatis.transaction.TransactionFactory;
 import org.dom4j.Document;
@@ -80,29 +81,11 @@ public class XMLConfigBuilder extends BaseBuilder {
         }
     }
 
-    /**
-     * 解析配置文件的入口方法
-     * <p>
-     * 解析顺序（按 MyBatis 标准顺序）：
-     * 1. environments：环境配置（数据源、事务管理器）
-     * 2. mappers：Mapper 映射文件引用
-     * <p>
-     * 完整版本还应包括：
-     * - properties：属性配置
-     * - settings：全局设置
-     * - typeAliases：类型别名
-     * - typeHandlers：类型处理器
-     * - plugins：插件
-     * - objectFactory：对象工厂
-     * - objectWrapperFactory：对象包装器工厂
-     * <p>
-     * 当前简化版本仅实现了核心的 environments 和 mappers 解析。
-     *
-     * @return 填充完成的 Configuration 对象
-     * @throws RuntimeException 解析过程中发生异常
-     */
+
     public Configuration parse() {
         try {
+            // 插件 step-16 添加
+            pluginElement(root.element("plugins"));
             // 环境
             environmentsElement(root.element("environments"));
             // 解析映射器
@@ -112,6 +95,35 @@ public class XMLConfigBuilder extends BaseBuilder {
         }
         return configuration;
     }
+
+    /**
+     * Mybatis 允许你在某一点切入映射语句执行的调度
+     * <plugins>
+     *     <plugin interceptor="cn.zzb.mybatis.test.plugin.TestPlugin">
+     *         <property name="test00" value="100"/>
+     *         <property name="test01" value="100"/>
+     *     </plugin>
+     * </plugins>
+     */
+    private void pluginElement(Element parent) throws Exception {
+        if (parent == null) return;
+        List<Element> elements = parent.elements();
+        for (Element element : elements) {
+            String interceptor = element.attributeValue("interceptor");
+            // 参数配置
+            Properties properties = new Properties();
+            List<Element> propertyElementList = element.elements("property");
+            for (Element property : propertyElementList) {
+                properties.setProperty(property.attributeValue("name"), property.attributeValue("value"));
+            }
+            // 获取插件实现类并实例
+            Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).newInstance();
+            interceptorInstance.setProperties(properties);
+            configuration.addInterceptor(interceptorInstance);
+        }
+    }
+
+
 
     /**
      * 解析环境配置（environments 标签）

@@ -1,6 +1,7 @@
 package cn.zzb.mybatis.executor.statement;
 
 
+import cn.zzb.mybatis.mapping.BoundSql;
 import cn.zzb.mybatis.session.ResultHandler;
 
 import java.sql.Connection;
@@ -24,5 +25,8 @@ public interface StatementHandler {
 
     /** 执行更新 */
     int update(Statement statement) throws SQLException;
+
+    /** 获取绑定SQL */
+    BoundSql getBoundSql();
 
 }
