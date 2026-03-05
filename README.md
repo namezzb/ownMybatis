@@ -58,6 +58,9 @@
 - ✅ SqlSession 会话管理
 - ✅ Executor 执行器抽象
 - ✅ 完整 CRUD 操作支持（insert / update / delete / select）
+- ✅ 一级缓存（Local Cache）支持
+  - CacheKey 生成（statementId + 分页 + SQL + 参数 + environment）
+  - 作用域配置（SESSION / STATEMENT）
 - ✅ KeyGenerator 主键生成器体系
   - KeyGenerator 接口（processBefore / processAfter）
   - NoKeyGenerator（无主键生成）
