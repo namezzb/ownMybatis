@@ -27,8 +27,11 @@ public class InitTest {
         ISkuDao userDao = sqlSession.getMapper(ISkuDao.class);
 
         // 3. 测试验证
-        Sku sku = userDao.querySkuById(3L);
-        log.info("测试结果：{}", JSON.toJSONStringWithDateFormat(sku, "yyyy-MM-dd HH:mm:ss"));
+        log.info("测试结果：{}", JSON.toJSONString(userDao.querySkuById(3L)));
+        // sqlSession.commit();
+        // sqlSession.clearCache();
+        // sqlSession.close();
+        log.info("测试结果：{}", JSON.toJSONString(userDao.querySkuById(3L)));
     }
 
     @Test

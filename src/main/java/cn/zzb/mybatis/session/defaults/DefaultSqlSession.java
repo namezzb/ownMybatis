@@ -66,7 +66,8 @@ public class DefaultSqlSession implements SqlSession {
         logger.info("执行查询 statement：{} parameter：{}", statement, JSON.toJSONString(parameter));
         MappedStatement ms = configuration.getMappedStatement(statement);
         try {
-            return executor.query(ms, parameter, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER, ms.getSqlSource().getBoundSql(parameter));
+            //直接进入无key的executor查询,然后重载方法中调用一级缓存的createKey,实现带缓存的查询
+            return executor.query(ms, parameter, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
         } catch (SQLException e) {
             throw new RuntimeException("Error querying database.  Cause: " + e);
         }
@@ -100,6 +101,22 @@ public class DefaultSqlSession implements SqlSession {
         } catch (SQLException e) {
             throw new RuntimeException("Error committing transaction.  Cause: " + e);
         }
+    }
+
+    /**
+     * 关闭sqlSession,并清理一级缓存
+     */
+    @Override
+    public void close() {
+        executor.close(true);
+    }
+
+    /**
+     * 清空一级缓存
+     */
+    @Override
+    public void clearCache() {
+        executor.clearLocalCache();
     }
 
     @Override
